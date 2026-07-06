@@ -1,5 +1,5 @@
 import Feed from "./Feed";
 
-export default function FeedPage() {
-  return <Feed />;
+export default async function FeedPage() {
+	return <Feed />;
 }

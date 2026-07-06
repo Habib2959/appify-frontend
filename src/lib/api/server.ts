@@ -23,16 +23,25 @@ async function serverFetch<T = unknown>(
 	return apiFetch<T>(path, { ...options, headers, skipAuthRefresh: true });
 }
 
-// server-side verb helpers; use inside Server Components and Route Handlers
+// server-side helpers, use inside Server Components and Route Handlers
 export const serverApi = {
 	get: <T = unknown>(path: string, options?: ApiRequestOptions) =>
 		serverFetch<T>(path, { ...options, method: "GET" }),
-	post: <T = unknown>(path: string, body?: unknown, options?: ApiRequestOptions) =>
-		serverFetch<T>(path, { ...options, method: "POST", body }),
-	put: <T = unknown>(path: string, body?: unknown, options?: ApiRequestOptions) =>
-		serverFetch<T>(path, { ...options, method: "PUT", body }),
-	patch: <T = unknown>(path: string, body?: unknown, options?: ApiRequestOptions) =>
-		serverFetch<T>(path, { ...options, method: "PATCH", body }),
+	post: <T = unknown>(
+		path: string,
+		body?: unknown,
+		options?: ApiRequestOptions,
+	) => serverFetch<T>(path, { ...options, method: "POST", body }),
+	put: <T = unknown>(
+		path: string,
+		body?: unknown,
+		options?: ApiRequestOptions,
+	) => serverFetch<T>(path, { ...options, method: "PUT", body }),
+	patch: <T = unknown>(
+		path: string,
+		body?: unknown,
+		options?: ApiRequestOptions,
+	) => serverFetch<T>(path, { ...options, method: "PATCH", body }),
 	delete: <T = unknown>(path: string, options?: ApiRequestOptions) =>
 		serverFetch<T>(path, { ...options, method: "DELETE" }),
 };
