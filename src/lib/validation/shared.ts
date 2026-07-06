@@ -1,6 +1,5 @@
 import { z } from "zod";
 
-// First error message per field, keyed by field name.
 export function getFieldErrors(error: z.ZodError): Record<string, string> {
 	const { fieldErrors } = z.flattenError(error);
 	const result: Record<string, string> = {};

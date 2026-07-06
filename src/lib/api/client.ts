@@ -1,6 +1,5 @@
 import { API_URL } from "@/lib/config";
 
-// Error thrown for any non-2xx response. Carries status and parsed body.
 export class ApiError extends Error {
 	readonly status: number;
 	readonly data: unknown;
@@ -22,13 +21,11 @@ export type ApiRequestOptions = Omit<RequestInit, "body"> & {
 	body?: unknown;
 	// bearer token; on the server prefer serverApi which reads it from cookies
 	token?: string | null;
-	// Next.js fetch cache hints (revalidate / tags)
 	next?: NextFetchRequestConfig;
 	// skip the automatic 401 -> refresh -> retry (used internally)
 	skipAuthRefresh?: boolean;
 };
 
-// backend endpoint that rotates tokens using the refresh_token cookie
 const REFRESH_PATH = "/user/refresh";
 
 // server can use an internal URL (e.g. docker service host); browser uses public URL
@@ -64,8 +61,6 @@ function isPlainBody(body: unknown): boolean {
 	);
 }
 
-// central fetch wrapper; works on server and client. returns parsed JSON as T
-// (undefined for 204). throws ApiError on non-2xx.
 export async function apiFetch<T = unknown>(
 	path: string,
 	options: ApiRequestOptions = {},
@@ -151,7 +146,6 @@ function safeJson(raw: string): unknown {
 	}
 }
 
-// convenience verb helpers over apiFetch
 export const api = {
 	get: <T = unknown>(path: string, options?: ApiRequestOptions) =>
 		apiFetch<T>(path, { ...options, method: "GET" }),
