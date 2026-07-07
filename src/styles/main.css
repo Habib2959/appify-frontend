@@ -5920,6 +5920,7 @@
 }
 ._comment_main {
 	display: flex;
+	margin-bottom: 16px;
 }
 ._comment_image {
 	flex: 0 0 40px;
@@ -5947,7 +5948,7 @@
 	width: 100%;
 	max-width: fit-content;
 	position: relative;
-	margin: 0 0 50px;
+	margin: 0 0 8px;
 }
 ._comment_details_top {
 	display: flex;
@@ -6006,12 +6007,13 @@
 	color: var(--color6);
 }
 ._comment_reply_num {
-	position: absolute;
-	bottom: -37px;
+	margin-top: 4px;
 }
 ._comment_reply_list {
 	display: flex;
 	align-items: center;
+	flex-wrap: wrap;
+	gap: 4px 10px;
 }
 ._comment_reply_list li {
 	margin: 0 2px;

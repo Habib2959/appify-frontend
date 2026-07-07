@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { api, ApiError } from "@/lib/api";
 import PostCard, { type FeedPost } from "./PostCard";
+import PostCardSkeleton from "./PostCardSkeleton";
 
 const PAGE_SIZE = 10;
 
@@ -73,8 +74,15 @@ export default function PostsFeed() {
 	return (
 		<>
 			{posts.map((post) => (
-				<PostCard key={post.id} post={post} />
+				<PostCard key={post.id} post={post} initialCommentTotal={post.commentCount} />
 			))}
+			{loading && (
+				<>
+					<PostCardSkeleton />
+					<PostCardSkeleton />
+					<PostCardSkeleton />
+				</>
+			)}
 			<div ref={sentinelRef} />
 			{error && (
 				<p className="_form_error">
