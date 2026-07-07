@@ -18,7 +18,24 @@ type FeedResponse = {
 	};
 };
 
-export default function PostsFeed() {
+type PostsFeedProps = {
+	createdPost?: FeedPost | null;
+};
+
+function mergeUniquePosts(current: FeedPost[], incoming: FeedPost[]) {
+	const seen = new Set(current.map((post) => post.id));
+	const next = [...current];
+
+	for (const post of incoming) {
+		if (seen.has(post.id)) continue;
+		seen.add(post.id);
+		next.push(post);
+	}
+
+	return next;
+}
+
+export default function PostsFeed({ createdPost }: PostsFeedProps) {
 	const router = useRouter();
 	const [posts, setPosts] = useState<FeedPost[]>([]);
 	const [offset, setOffset] = useState(0);
@@ -35,8 +52,8 @@ export default function PostsFeed() {
 			const res = await api.get<FeedResponse>("/feed", {
 				params: { offset, limit: PAGE_SIZE },
 			});
-			setPosts((prev) => [...prev, ...res.items]);
-			setOffset(offset + res.items.length);
+			setPosts((prev) => mergeUniquePosts(prev, res.items));
+			setOffset((prev) => prev + res.items.length);
 			setHasMore(res.pagination.hasMore);
 		} catch (err) {
 			if (err instanceof ApiError && err.status === 401) {
@@ -58,6 +75,19 @@ export default function PostsFeed() {
 
 	// sentinel starts inside the viewport (list is empty), so the observer
 	// fires immediately and loads page 1 without a separate mount effect
+	useEffect(() => {
+		if (!createdPost) return;
+		setPosts((prev) => {
+			if (prev.some((post) => post.id === createdPost.id)) {
+				return prev;
+			}
+
+			return [createdPost, ...prev];
+		});
+		setOffset((prev) => prev + 1);
+		setHasMore(true);
+	}, [createdPost]);
+
 	useEffect(() => {
 		const el = sentinelRef.current;
 		if (!el) return;

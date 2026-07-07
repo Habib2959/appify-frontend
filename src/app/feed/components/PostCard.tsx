@@ -42,6 +42,7 @@ export default function PostCard({ post, initialCommentTotal }: PostCardProps) {
 	const [likersOpen, setLikersOpen] = useState(false);
 	const [commentsOpen, setCommentsOpen] = useState(false);
 	const [commentTotal, setCommentTotal] = useState<number | null>(initialCommentTotal ?? null);
+	const getMediaUrl = (url: string) => (url.startsWith("http") ? url : `${UPLOADS_URL}${url}`);
 
 	return (
 		<div className="_feed_inner_timeline_post_area _b_radious6 _padd_b24 _padd_t24 _mar_b16">
@@ -73,13 +74,13 @@ export default function PostCard({ post, initialCommentTotal }: PostCardProps) {
 						{item.type === "image" ? (
 							// eslint-disable-next-line @next/next/no-img-element
 							<img
-								src={`${UPLOADS_URL}${item.url}`}
+								src={getMediaUrl(item.url)}
 								alt=""
 								className="_time_img"
 							/>
 						) : (
 							<video
-								src={`${UPLOADS_URL}${item.url}`}
+								src={getMediaUrl(item.url)}
 								className="_time_img"
 								controls
 							/>

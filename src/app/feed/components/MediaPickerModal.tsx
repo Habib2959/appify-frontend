@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
 export type MediaType = "image" | "video";
@@ -42,19 +42,24 @@ export default function MediaPickerModal({
 }: MediaPickerModalProps) {
 	const [files, setFiles] = useState<SelectedFile[]>(initialFiles);
 	const [error, setError] = useState("");
-	const [wasOpen, setWasOpen] = useState(open);
+	const [isMounted, setIsMounted] = useState(false);
 	const fileInputRef = useRef<HTMLInputElement>(null);
 
-	// resync with the composer's current attachments each time the modal opens
-	if (open !== wasOpen) {
-		setWasOpen(open);
-		if (open) {
-			setFiles(initialFiles);
-			setError("");
-		}
-	}
+	useEffect(() => {
+		setIsMounted(true);
 
-	if (!open) return null;
+		return () => {
+			setIsMounted(false);
+		};
+	}, []);
+
+	useEffect(() => {
+		if (!open) return;
+		setFiles(initialFiles);
+		setError("");
+	}, [open, initialFiles]);
+
+	if (!open || !isMounted) return null;
 
 	const handleFilesSelected = (event: React.ChangeEvent<HTMLInputElement>) => {
 		const picked = Array.from(event.target.files ?? []);
@@ -160,9 +165,9 @@ export default function MediaPickerModal({
 						onChange={handleFilesSelected}
 					/>
 
-					<div className="_feed_inner_text_area_bottom">
-						<div className="_feed_inner_text_area_item">
-							<div className="_feed_inner_text_area_bottom_photo _feed_common">
+					<div className="_create_post_modal_actions">
+						<div className="_create_post_modal_actions_left">
+							<div className="_create_post_modal_picker_button">
 								<button
 									type="button"
 									className="_feed_inner_text_area_bottom_photo_link"
@@ -177,7 +182,7 @@ export default function MediaPickerModal({
 								</button>
 							</div>
 						</div>
-						<div className="_feed_inner_text_area_btn">
+						<div className="_create_post_modal_actions_right">
 							<button
 								type="button"
 								className="_feed_inner_text_area_btn_link"

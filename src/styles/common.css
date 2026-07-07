@@ -2224,6 +2224,53 @@ ul {
 	cursor: pointer;
 }
 
+._create_post_modal_actions {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+	padding: 12px 15px;
+	margin-top: 10px;
+	background: rgba(24, 144, 255, 0.05);
+	border-radius: 0 0 6px 6px;
+}
+
+._create_post_modal_actions_left {
+	display: flex;
+	align-items: center;
+}
+
+._create_post_modal_picker_button {
+	display: flex;
+	align-items: center;
+	padding: 0 10px;
+}
+
+._create_post_modal_actions_right {
+	display: flex;
+	align-items: center;
+}
+
+@media (max-width: 767px) {
+	._create_post_modal_actions {
+		flex-wrap: wrap;
+		padding: 12px 8px 8px;
+	}
+
+	._create_post_modal_actions_left,
+	._create_post_modal_actions_right {
+		width: 100%;
+	}
+
+	._create_post_modal_actions_left {
+		justify-content: center;
+	}
+
+	._create_post_modal_actions_right ._feed_inner_text_area_btn_link {
+		width: 100%;
+	}
+}
+
 ._likers_list {
 	display: flex;
 	flex-direction: column;

@@ -8,6 +8,7 @@ import MediaPickerModal, {
 } from "./MediaPickerModal";
 import { api, ApiError } from "@/lib/api";
 import { createPostSchema, getFieldErrors } from "@/lib/validation";
+import type { FeedPost } from "./PostCard";
 
 export default function MiddleFeed() {
   const [content, setContent] = useState("");
@@ -16,6 +17,7 @@ export default function MiddleFeed() {
   const [isPublic, setIsPublic] = useState(true);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [posting, setPosting] = useState(false);
+  const [latestCreatedPost, setLatestCreatedPost] = useState<FeedPost | null>(null);
 
   const removeAttachedFile = (index: number) => {
     setAttachedFiles((prev) => {
@@ -46,7 +48,7 @@ export default function MiddleFeed() {
         media = uploaded.media;
       }
 
-      await api.post("/feed/posts", {
+      const createdPost = await api.post<FeedPost>("/feed/posts", {
         content: result.data.content,
         media,
         isPublic,
@@ -56,6 +58,7 @@ export default function MiddleFeed() {
       setContent("");
       setAttachedFiles([]);
       setIsPublic(true);
+      setLatestCreatedPost(createdPost);
     } catch (err) {
       const message =
         err instanceof ApiError ? err.message : "Something went wrong";
@@ -342,7 +345,7 @@ export default function MiddleFeed() {
             </div>
 
           </div>
-          <PostsFeed />
+          <PostsFeed createdPost={latestCreatedPost} />
 
           <MediaPickerModal
             open={mediaModalOpen}
